@@ -1,5 +1,11 @@
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../hooks/useTranslation";
 import { LanguageSelector } from "./LanguageSelector";
+import { COMMON_LANGUAGES } from "../types";
+
+const MAX_CHARS = 5000;
+
+type Tab = "text" | "image" | "document";
 
 export function TranslatePage() {
   const {
@@ -15,39 +21,100 @@ export function TranslatePage() {
     swap,
   } = useTranslation();
 
+  const [activeTab, setActiveTab] = useState<Tab>("text");
+  const [copied, setCopied] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-grow textarea
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (el) {
+      el.style.height = "auto";
+      el.style.height = Math.max(160, el.scrollHeight) + "px";
+    }
+  }, [sourceText]);
+
   const handleCopy = async () => {
     if (translatedText) {
       await navigator.clipboard.writeText(translatedText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
+  const sourceLangName =
+    sourceLanguage === undefined
+      ? "AUTO-DETECT"
+      : (
+          COMMON_LANGUAGES.find((l) => l.code === sourceLanguage)?.name ??
+          sourceLanguage
+        ).toUpperCase();
+
+  const targetLangName = (
+    COMMON_LANGUAGES.find((l) => l.code === targetLanguage)?.name ??
+    targetLanguage
+  ).toUpperCase();
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      {/* Language bar */}
-      <div className="flex items-end gap-4 mb-4">
+    <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-4">
+      {/* Tab Bar */}
+      <div className="glass rounded-2xl p-1.5 flex gap-1 shadow-glass">
+        {(
+          [
+            { id: "text", label: "Text", disabled: false },
+            { id: "image", label: "Image", disabled: false },
+            { id: "document", label: "Document", disabled: true },
+          ] as const
+        ).map((tab) => (
+          <button
+            key={tab.id}
+            data-testid={`tab-${tab.id}`}
+            disabled={tab.disabled}
+            onClick={() => !tab.disabled && setActiveTab(tab.id)}
+            className={`
+              flex-1 py-2.5 px-4 rounded-xl text-sm font-display font-medium
+              transition-all duration-200
+              ${
+                activeTab === tab.id
+                  ? "bg-gradient-to-r from-accent-cyan/10 to-accent-purple/10 text-white border border-accent-cyan/20 shadow-glow-cyan"
+                  : tab.disabled
+                    ? "text-slate-400/40 cursor-not-allowed"
+                    : "text-slate-400 hover:text-slate-200 cursor-pointer"
+              }
+            `}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Language Bar */}
+      <div className="flex items-center gap-2 justify-center">
         <LanguageSelector
           value={sourceLanguage}
           onChange={setSourceLanguage}
           showAutoDetect
           label="From"
+          variant="source"
+          testId="source-language-selector"
         />
 
+        {/* Swap button */}
         <button
+          data-testid="swap-languages"
           onClick={swap}
           disabled={!sourceLanguage}
           className="
-            mb-0.5 p-2 rounded-lg
-            text-gray-400 hover:text-fluently-600
-            hover:bg-fluently-50 dark:hover:bg-gray-800
+            w-9 h-9 rounded-full glass flex items-center justify-center
+            text-slate-400 hover:text-white
             disabled:opacity-30 disabled:cursor-not-allowed
-            transition-colors
+            transition-all duration-200 hover:bg-white/5 shrink-0
           "
           title="Swap languages"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -64,100 +131,175 @@ export function TranslatePage() {
           value={targetLanguage}
           onChange={(code) => code && setTargetLanguage(code)}
           label="To"
+          variant="target"
+          testId="target-language-selector"
         />
       </div>
 
-      {/* Translation panels */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Source panel */}
-        <div className="relative">
-          <textarea
-            value={sourceText}
-            onChange={(e) => setSourceText(e.target.value)}
-            placeholder="Type or paste text to translate..."
-            className="
-              w-full h-56 p-4 rounded-xl resize-none
-              bg-white dark:bg-gray-800
-              border border-gray-200 dark:border-gray-700
-              text-base leading-relaxed
-              placeholder:text-gray-400
-              focus:outline-none focus:ring-2 focus:ring-fluently-500 focus:border-transparent
-            "
-          />
-          <div className="absolute bottom-3 right-3 text-xs text-gray-400">
-            {sourceText.length > 0 && `${sourceText.length} chars`}
-          </div>
-          {sourceText.length > 0 && (
-            <button
-              onClick={() => setSourceText("")}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
-              title="Clear"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          )}
-        </div>
+      {/* Translation Card */}
+      <div className="glass rounded-3xl shadow-glass overflow-hidden">
+        {/* Source half */}
+        <div className="relative p-5 min-h-[180px]">
+          {/* Source language label */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[11px] font-display font-medium tracking-[0.15em] text-accent-cyan uppercase">
+              {sourceLangName}
+            </span>
 
-        {/* Target panel */}
-        <div className="relative">
-          <div
-            className="
-              w-full h-56 p-4 rounded-xl overflow-y-auto
-              bg-gray-50 dark:bg-gray-900
-              border border-gray-200 dark:border-gray-700
-              text-base leading-relaxed
-            "
-          >
-            {isLoading ? (
-              <div className="flex items-center gap-2 text-gray-400">
-                <div className="w-4 h-4 border-2 border-fluently-500 border-t-transparent rounded-full animate-spin" />
-                Translating...
-              </div>
-            ) : error ? (
-              <div className="text-red-500 text-sm">{error}</div>
-            ) : translatedText ? (
-              <span>{translatedText}</span>
-            ) : (
-              <span className="text-gray-400">Translation will appear here</span>
+            {/* Clear button */}
+            {sourceText.length > 0 && (
+              <button
+                onClick={() => setSourceText("")}
+                className="text-slate-500 hover:text-slate-300 transition-colors"
+                title="Clear"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
             )}
           </div>
 
+          {/* Textarea */}
+          <textarea
+            ref={textareaRef}
+            data-testid="source-textarea"
+            value={sourceText}
+            onChange={(e) => {
+              if (e.target.value.length <= MAX_CHARS) {
+                setSourceText(e.target.value);
+              }
+            }}
+            placeholder="Type or paste text to translate..."
+            className="
+              w-full bg-transparent resize-none text-[17px] leading-relaxed
+              text-white placeholder:text-slate-600
+              focus:outline-none min-h-[120px]
+            "
+          />
+
+          {/* Char count */}
+          <div
+            data-testid="char-count"
+            className="text-right text-[11px] text-slate-400/60 font-display mt-1"
+          >
+            {sourceText.length}/{MAX_CHARS}
+          </div>
+        </div>
+
+        {/* Gradient divider */}
+        <div className="relative h-px">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="absolute inset-0 shadow-glow-purple" />
+        </div>
+
+        {/* Target half */}
+        <div className="relative p-5 min-h-[180px]">
+          {/* Target language label */}
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[11px] font-display font-medium tracking-[0.15em] text-accent-purple/90 uppercase">
+              {targetLangName}
+            </span>
+          </div>
+
+          {/* Translation output */}
+          <div data-testid="translation-output" className="min-h-[120px]">
+            {isLoading ? (
+              <div
+                data-testid="loading-indicator"
+                className="flex items-center gap-2.5 text-slate-400"
+              >
+                <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
+                <span className="text-sm font-display">Translating...</span>
+              </div>
+            ) : error ? (
+              <div
+                data-testid="error-message"
+                className="text-red-400 text-sm"
+              >
+                {error}
+              </div>
+            ) : translatedText ? (
+              <p className="text-[17px] leading-relaxed text-white">
+                {translatedText}
+              </p>
+            ) : (
+              <p className="text-[17px] leading-relaxed text-slate-600">
+                Translation will appear here
+              </p>
+            )}
+          </div>
+
+          {/* Copy button */}
           {translatedText && !isLoading && (
-            <button
-              onClick={handleCopy}
-              className="
-                absolute bottom-3 right-3
-                px-3 py-1 rounded-md text-xs font-medium
-                text-fluently-600 hover:bg-fluently-50
-                dark:text-fluently-400 dark:hover:bg-gray-800
-                transition-colors
-              "
-              title="Copy translation"
-            >
-              Copy
-            </button>
+            <div className="flex justify-end mt-3">
+              <button
+                data-testid="copy-button"
+                onClick={handleCopy}
+                className="
+                  flex items-center gap-1.5 px-3.5 py-2 rounded-xl
+                  bg-accent-purple/10 text-accent-purple
+                  border border-accent-purple/20
+                  hover:bg-accent-purple/15 transition-all duration-200
+                  text-xs font-display font-medium
+                "
+                title="Copy translation"
+              >
+                {copied ? (
+                  <>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copy
+                  </>
+                )}
+              </button>
+            </div>
           )}
         </div>
-      </div>
-
-      {/* Status bar */}
-      <div className="mt-4 text-center text-xs text-gray-400">
-        {!sourceLanguage && sourceText.length > 0 && !isLoading && (
-          <span>Language auto-detected</span>
-        )}
       </div>
     </div>
   );
