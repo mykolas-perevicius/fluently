@@ -1,0 +1,169 @@
+[
+  {
+    "id": "es_01",
+    "pair": "en-es",
+    "source": "The weather is beautiful today.",
+    "references": [
+      "El clima es hermoso hoy.",
+      "El tiempo está hermoso hoy.",
+      "El clima está precioso hoy."
+    ]
+  },
+  {
+    "id": "es_02",
+    "pair": "en-es",
+    "source": "She walked through the old town, admiring the architecture.",
+    "references": [
+      "Ella caminó por el casco antiguo, admirando la arquitectura.",
+      "Caminó por el casco antiguo, admirando la arquitectura.",
+      "Ella recorrió el casco antiguo, admirando la arquitectura."
+    ]
+  },
+  {
+    "id": "es_03",
+    "pair": "en-es",
+    "source": "It's raining cats and dogs.",
+    "references": [
+      "Está lloviendo a cántaros.",
+      "Llueve a cántaros."
+    ]
+  },
+  {
+    "id": "es_04",
+    "pair": "en-es",
+    "source": "We are pleased to inform you that your application has been approved.",
+    "references": [
+      "Nos complace informarle que su solicitud ha sido aprobada.",
+      "Tenemos el placer de informarle que su solicitud ha sido aprobada."
+    ]
+  },
+  {
+    "id": "fr_01",
+    "pair": "en-fr",
+    "source": "Could you please pass me the salt?",
+    "references": [
+      "Pourriez-vous me passer le sel, s'il vous plaît ?",
+      "Pouvez-vous me passer le sel, s'il vous plaît ?"
+    ]
+  },
+  {
+    "id": "fr_02",
+    "pair": "en-fr",
+    "source": "The study found a significant correlation between sleep and academic performance.",
+    "references": [
+      "L'étude a trouvé une corrélation significative entre le sommeil et les résultats scolaires.",
+      "L'étude a révélé une corrélation significative entre le sommeil et la performance académique."
+    ]
+  },
+  {
+    "id": "fr_03",
+    "pair": "en-fr",
+    "source": "He let the cat out of the bag.",
+    "references": [
+      "Il a vendu la mèche.",
+      "Il a révélé le secret."
+    ]
+  },
+  {
+    "id": "fr_04",
+    "pair": "en-fr",
+    "source": "The Eiffel Tower was completed in 1889 for the World's Fair.",
+    "references": [
+      "La tour Eiffel a été achevée en 1889 pour l'Exposition universelle.",
+      "La tour Eiffel fut achevée en 1889 pour l'Exposition universelle."
+    ]
+  },
+  {
+    "id": "de_01",
+    "pair": "en-de",
+    "source": "Good morning, how are you today?",
+    "references": [
+      "Guten Morgen, wie geht es Ihnen heute?",
+      "Guten Morgen, wie geht es dir heute?"
+    ]
+  },
+  {
+    "id": "de_02",
+    "pair": "en-de",
+    "source": "Please find attached the quarterly financial report.",
+    "references": [
+      "Anbei finden Sie den vierteljährlichen Finanzbericht.",
+      "Im Anhang finden Sie den Quartalsbericht."
+    ]
+  },
+  {
+    "id": "de_03",
+    "pair": "en-de",
+    "source": "That's not my cup of tea.",
+    "references": [
+      "Das ist nicht mein Ding.",
+      "Das ist nicht mein Fall.",
+      "Das ist nichts für mich."
+    ]
+  },
+  {
+    "id": "de_04",
+    "pair": "en-de",
+    "source": "The patient should take two tablets twice a day after meals.",
+    "references": [
+      "Der Patient sollte zweimal täglich zwei Tabletten nach den Mahlzeiten einnehmen.",
+      "Die Patientin sollte zwei Tabletten zweimal täglich nach den Mahlzeiten einnehmen."
+    ]
+  },
+  {
+    "id": "ja_01",
+    "pair": "en-ja",
+    "source": "Thank you very much for your help.",
+    "references": [
+      "ご協力いただきありがとうございます。",
+      "助けていただきありがとうございます。",
+      "ご助力いただき誠にありがとうございます。"
+    ]
+  },
+  {
+    "id": "ja_02",
+    "pair": "en-ja",
+    "source": "The meeting has been rescheduled to next Monday.",
+    "references": [
+      "会議は来週の月曜日に変更されました。",
+      "ミーティングは来週月曜日に変更になりました。"
+    ]
+  },
+  {
+    "id": "ja_03",
+    "pair": "en-ja",
+    "source": "Where is the nearest train station?",
+    "references": [
+      "最寄りの駅はどこですか？",
+      "一番近い駅はどこですか？"
+    ]
+  },
+  {
+    "id": "pt_01",
+    "pair": "en-pt",
+    "source": "I would like a cup of coffee, please.",
+    "references": [
+      "Eu gostaria de uma xícara de café, por favor.",
+      "Queria um café, por favor.",
+      "Eu queria uma chávena de café, por favor."
+    ]
+  },
+  {
+    "id": "pt_02",
+    "pair": "en-pt",
+    "source": "Brazil is the largest country in South America.",
+    "references": [
+      "O Brasil é o maior país da América do Sul.",
+      "Brasil é o maior país da América do Sul."
+    ]
+  },
+  {
+    "id": "pt_03",
+    "pair": "en-pt",
+    "source": "Could you recommend a good restaurant nearby?",
+    "references": [
+      "Você poderia recomendar um bom restaurante por perto?",
+      "Poderia recomendar um bom restaurante nas proximidades?"
+    ]
+  }
+]
