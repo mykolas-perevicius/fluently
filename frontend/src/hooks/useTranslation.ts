@@ -51,7 +51,7 @@ export function useTranslation(
       setError(null);
 
       try {
-        const result = await translateText([text], target, source);
+        const result = await translateText([text], target, source, abortRef.current.signal);
         setTranslatedText(result[0] ?? "");
       } catch (err) {
         if (err instanceof Error && err.name === "AbortError") return;

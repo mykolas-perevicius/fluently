@@ -9,11 +9,13 @@ services:
     env_file: .env
     environment:
       LLM_BASE_URL: http://ollama:11434/v1/   # Override: use Docker service name
+    command: ["/app/.venv/bin/fastapi", "dev", "src/main.py", "--host", "0.0.0.0", "--port", "8000"]
     volumes:
       - ./backend/src:/app/src          # Hot reload in dev
       - ./backend/models:/app/models    # FastText model
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
     restart: unless-stopped
 
   # ── Frontend ────────────────────────────────────────────
@@ -30,10 +32,16 @@ services:
   # ── Ollama (local LLM) ─────────────────────────────────
   ollama:
     image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+      - ./ollama-entrypoint.sh:/ollama-entrypoint.sh
+    entrypoint: ["/bin/bash", "/ollama-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
     deploy:
       resources:
         reservations:

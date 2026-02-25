@@ -16,6 +16,7 @@ async def main(_app: FastAPI):
     translation_model = AsyncOpenAI(
         base_url=config.LLM_BASE_URL,
         api_key=config.LLM_API_KEY,
+        max_retries=0,
     )
 
     lid_model = fasttext.load_model(config.FASTTEXT_MODEL_PATH)

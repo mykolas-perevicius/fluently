@@ -44,9 +44,11 @@ export async function translateText(
   contents: string[],
   targetLanguageCode: string,
   sourceLanguageCode?: string,
+  signal?: AbortSignal,
 ): Promise<string[]> {
   return request<string[]>("/translate/", {
     method: "POST",
+    signal,
     body: JSON.stringify({
       contents,
       targetLanguageCode,
