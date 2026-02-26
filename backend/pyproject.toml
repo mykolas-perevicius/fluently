@@ -9,6 +9,8 @@ dependencies = [
     "fasttext>=0.9.3",
     "openai>=2.20.0",
     "pillow>=12.1.1",
+    "pymupdf>=1.25.0",
+    "pytesseract>=0.3.13",
 ]
 
 [dependency-groups]

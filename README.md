@@ -70,8 +70,9 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system design, [docs/ROADMA
 | Capability | Status | Description |
 |------------|--------|-------------|
 | **Text translation** | ✅ Live | Batch translate up to 50 strings per request |
-| **Image translation** | ✅ Live | Extract + translate text from images (OCR → translate) |
-| **PDF translation** | 🚧 Next | Full document translation preserving layout |
+| **Image translation** | ✅ Live | Extract + translate text from images (OCR + handwriting AI) |
+| **Document translation** | ✅ Live | PDF layout extraction with formatted output (Plain, Markdown, LaTeX) |
+| **PII detection & redaction** | ✅ Live | Hybrid regex + AI detection with mask, asterisk, or synthetic redaction |
 | **Language detection** | ✅ Live | FastText-based auto-detection (176 languages) |
 | **Streaming** | 📋 Planned | Server-sent events for long translations |
 
@@ -79,7 +80,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system design, [docs/ROADMA
 
 ## Tech Stack
 
-**Backend:** FastAPI · Python 3.14+ · FastText · Ollama (dev) / vLLM (prod) · TranslateGemma 12B
+**Backend:** FastAPI · Python 3.14+ · FastText · PyMuPDF · Ollama (dev) / vLLM (prod) · TranslateGemma 12B
 
 **Frontend:** React 19 · TypeScript · Vite · TailwindCSS
 

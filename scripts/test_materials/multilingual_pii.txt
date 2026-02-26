@@ -1,0 +1,67 @@
+AVISO INTERNO / INTERNAL NOTICE
+Fecha / Date: 10 de febrero de 2026
+
+Estimados miembros del equipo,
+
+Les escribo para informarles sobre los cambios recientes en nuestro sistema
+de gestion de datos de clientes. Como parte de la actualizacion del sistema,
+se han migrado todos los registros al nuevo servidor centralizado. Si
+experimentan algun problema de acceso, comuniquense con nuestro equipo de
+soporte tecnico.
+
+Dear team members,
+
+I am writing to inform you about the recent changes to our client data
+management system. As part of the system upgrade, all records have been
+migrated to the new centralized server. If you experience any access issues,
+please contact our technical support team.
+
+--- Contactos / Contacts ---
+
+Soporte tecnico / Technical Support:
+    Nombre: Carlos Enrique Montoya
+    Correo: carlos.montoya@empresaglobal.com.mx
+    Telefono: +52 55 4321 8765
+
+Coordinadora de proyecto / Project Coordinator:
+    Name: Sarah Elizabeth Thompson
+    Email: s.thompson@globalventures.co.uk
+    Phone: +44 20 7946 0958
+
+Auditor externo / External Auditor:
+    Nombre: Luis Fernando Reyes Gutierrez
+    Correo: lf.reyes@auditoriaexterna.es
+    Telefono: +34 91 123 4567
+
+--- Datos de prueba / Test Data ---
+
+Los siguientes registros son ficticios y se utilizan unicamente para
+verificar el correcto funcionamiento del sistema de deteccion de datos
+personales. No deben ser considerados datos reales.
+
+The following records are fictitious and are used solely to verify the
+correct functioning of the personal data detection system. They should
+not be treated as real data.
+
+    Nombre / Name: Ana Sofia Delgado Ruiz
+    Numero de Seguro Social / SSN: 987-65-4321
+    Tarjeta de credito / Credit Card: 5412 7534 9012 3456
+    Direccion IP / IP Address: 10.0.42.117
+    Direccion fisica / Physical Address:
+        Calle Reforma 2450, Piso 8
+        Colonia Juarez, Ciudad de Mexico, CP 06600
+
+Es fundamental que todos los departamentos revisen sus procedimientos de
+manejo de informacion personal antes del 1 de marzo de 2026. La proteccion
+de los datos personales de nuestros clientes es una responsabilidad
+compartida y una obligacion legal.
+
+It is essential that all departments review their personal information
+handling procedures before March 1, 2026. The protection of our clients'
+personal data is a shared responsibility and a legal obligation.
+
+Atentamente / Regards,
+
+Carlos Enrique Montoya
+Director de Tecnologia / Chief Technology Officer
+EmpresaGlobal S.A. de C.V.

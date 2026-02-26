@@ -1,6 +1,6 @@
 # Fluently — Architecture
 
-> Last updated: 2025-02-19
+> Last updated: 2026-02-25
 > Status: Living document — update as the system evolves.
 
 ---
@@ -37,10 +37,11 @@ Fluently is a "translate everything" platform. The value proposition is **not** 
 │                     API Gateway                           │
 │                      FastAPI                              │
 │                                                           │
-│  ┌────────────────┐  ┌────────────────┐                  │
-│  │ /translate/     │  │ /translate/    │                  │
-│  │   (text)       │  │   image        │  ← routers       │
-│  └───────┬────────┘  └───────┬────────┘                  │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐       │
+│  │ /translate/   │ │ /translate/  │ │  /pii/       │       │
+│  │  (text)       │ │  image,      │ │  detect,     │ ← API │
+│  │              │ │  document    │ │  redact      │       │
+│  └──────┬───────┘ └──────┬───────┘ └──────┬───────┘       │
 │          │                   │                            │
 │          ▼                   ▼                            │
 │  ┌─────────────────────────────────────┐                 │
@@ -79,19 +80,19 @@ The backend follows a clean layered architecture to keep routers thin and logic 
 
 ```
 routers/          → HTTP concerns only (validation, status codes, response shaping)
-  ├── translate.py
-  ├── documents.py    (future: PDF, DOCX)
+  ├── translate.py    → /translate/, /translate/image, /translate/document
+  ├── pii.py          → /pii/detect, /pii/redact
   └── health.py
 
-services/         → Business logic (stateless, injectable, testable)
-  ├── translation.py  → prompt construction, LLM calls, response parsing
-  ├── detection.py    → language detection via FastText
-  ├── ocr.py          → image text extraction (future: Tesseract / vision model)
-  └── document.py     → PDF parsing, layout preservation (future)
-
-utils/            → Pure utilities (no side effects)
-  ├── language.py     → LanguageCode enum, LANGUAGES map
-  └── prompts.py      → prompt templates
+utils/            → Pure utilities and domain logic
+  ├── language.py       → LanguageCode enum, LANGUAGES map
+  ├── classifier.py     → Image text type classification (printed/handwritten)
+  ├── ocr.py            → Tesseract OCR extraction
+  ├── image.py          → Image processing (resize, format)
+  ├── pdf_layout.py     → PyMuPDF layout extraction (headings, tables, lists)
+  ├── format_renderers.py → Plaintext, Markdown, LaTeX renderers
+  ├── pii_detector.py   → Hybrid PII detection (regex + LLM)
+  └── pii_redactor.py   → PII redaction (mask, asterisk, synthetic)
 
 dependencies.py   → FastAPI dependency injection (State, StateDep)
 main.py           → App factory, lifespan, router registration
@@ -183,12 +184,14 @@ App
 │   └── AboutPage (optional)
 │
 ├── Hooks
-│   ├── useTranslation()       ← API call + debounce
-│   ├── useLanguageDetect()    ← auto-detect display
-│   └── useFileUpload()        ← drag/drop + validation
+│   ├── useTranslation()           ← text translation + debounce
+│   ├── useImageTranslation()      ← image upload + OCR/vision pipeline
+│   ├── useDocumentTranslation()   ← document extraction + plain/formatted translation
+│   └── usePIIDetection()          ← PII scan, entity selection, redaction
 │
 └── Services
-    └── api.ts                 ← typed API client
+    └── api.ts                     ← typed API client (translate, translateImage,
+                                      translateDocumentFormatted, detectPII, redactPII)
 ```
 
 ### 4.3 API Client Design
@@ -196,13 +199,13 @@ App
 The frontend API client should be a thin, typed wrapper:
 
 ```typescript
-// services/api.ts — conceptual shape
-const api = {
-  translate: (texts: string[], target: LanguageCode, source?: LanguageCode) => Promise<string[]>,
-  translateImage: (image: File, target: LanguageCode, source?: LanguageCode) => Promise<string>,
-  // future:
-  translateDocument: (file: File, target: LanguageCode) => Promise<Blob>,
-}
+// services/api.ts — actual shape
+translateText(contents, targetLang, sourceLang?, signal?) → Promise<string[]>
+translateImage(imageBase64, targetLang, sourceLang?) → Promise<{ text, textType }>
+translateDocument(chunks, targetLang, sourceLang?, onProgress?, signal?) → Promise<string[]>
+translateDocumentFormatted(file, targetLang, sourceLang?, signal?) → Promise<{ plaintext, markdown, latex, pageCount, blockCount }>
+detectPII(text) → Promise<{ entities: PIIEntity[] }>
+redactPII(text, entities, strategy) → Promise<{ redacted_text, redaction_count }>
 ```
 
 ---
@@ -221,13 +224,31 @@ User types → debounce 300ms → POST /translate/ → display result
 User drops image → encode base64 → POST /translate/image → display extracted + translated text
 ```
 
-### 5.3 PDF Translation (planned)
+### 5.3 PDF Document Translation (live)
 
 ```
-User uploads PDF → POST /translate/document → SSE progress stream → download translated PDF
+User uploads PDF → POST /translate/document (multipart)
+  → PyMuPDF extracts structured blocks (headings, paragraphs, lists, tables)
+  → Font-size histogram classifies headings vs body text
+  → Blocks batched (groups of 50) → translated via asyncio.gather
+  → Three renderers produce plaintext / markdown / latex
+  → JSON response with all three formats + metadata
+Frontend shows format tabs: [Plain] [Markdown] [LaTeX] with download buttons
 ```
 
-### 5.4 Streaming (planned)
+### 5.4 PII Detection & Redaction (live)
+
+```
+User enables PII toggle → POST /pii/detect sends extracted text
+  → Regex pass: emails, phones, SSNs, credit cards, IPs (confidence: 0.95)
+  → LLM pass: names, addresses, organizations (parallel with regex)
+  → Deduplicate overlapping spans (prefer higher confidence)
+  → Frontend highlights entities, user confirms which to redact
+  → POST /pii/redact applies chosen strategy (mask/asterisk/synthetic)
+  → Redacted text fed into translation pipeline
+```
+
+### 5.5 Streaming (planned)
 
 For long documents, the backend will stream progress via Server-Sent Events:
 
@@ -284,6 +305,10 @@ Runs: frontend (Vite dev server) + backend (FastAPI + uvicorn) + Ollama
 | React + Vite (not Next.js) | SPA is fine — no SEO needed for a tool app | 2025-02-19 |
 | No database initially | Stateless is simpler; add persistence when we need accounts/history | 2025-02-19 |
 | Environment-based config | 12-factor app; no config files to manage across envs | 2025-02-19 |
+| PyMuPDF for PDF extraction | Rich font metadata (size, bold, italic), fast, well-maintained | 2026-02-25 |
+| Three output formats | Plaintext for quick copy, Markdown for docs, LaTeX for academic use | 2026-02-25 |
+| Hybrid PII detection | Regex for structured PII (fast, high confidence) + LLM for contextual (names, addresses) | 2026-02-25 |
+| PII runs pre-translation | User reviews entities before translation runs, keeping control over what gets redacted | 2026-02-25 |
 
 ---
 
@@ -301,6 +326,6 @@ Runs: frontend (Vite dev server) + backend (FastAPI + uvicorn) + Ollama
 
 - [ ] Do we want a caching layer (Redis) for repeated translations?
 - [ ] Should the frontend support offline/PWA for the UI shell?
-- [ ] What's the PDF parsing strategy? (PyMuPDF vs pdfplumber vs marker)
+- [x] ~~What's the PDF parsing strategy?~~ → **PyMuPDF** chosen: `page.get_text("dict")` provides font metadata + bounding boxes for layout classification
 - [ ] Do we need accounts/history, or stay fully anonymous?
 - [ ] Streaming: SSE or WebSockets?

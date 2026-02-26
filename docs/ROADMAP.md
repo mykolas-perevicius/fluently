@@ -1,6 +1,6 @@
 # Fluently — Roadmap
 
-> Last updated: 2025-02-19
+> Last updated: 2026-02-25
 
 ---
 
@@ -48,23 +48,28 @@
 
 ---
 
-## Phase 2: PDF Translation
+## Phase 2: PDF Translation + PII Redaction ✅
 
-**Goal:** "One step closer to full PDF translation." Upload a PDF, get a translated PDF back.
+**Goal:** Layout-aware document translation and pre-translation privacy protection.
 
 ### Backend
-- [ ] PDF text extraction (PyMuPDF or pdfplumber)
-- [ ] Page-by-page translation pipeline
-- [ ] Layout-aware translation (preserve formatting where possible)
-- [ ] Translated PDF generation
-- [ ] `POST /translate/document` endpoint
+- [x] PDF text extraction via PyMuPDF (`page.get_text("dict")` with font metadata)
+- [x] Layout classification: headings (font-size histogram), lists (prefix detection), tables (spatial heuristic)
+- [x] `POST /translate/document` endpoint (multipart/form-data, PDF only)
+- [x] Three format renderers: plaintext (ASCII tables), Markdown (GFM), LaTeX (compilable)
+- [x] File size limits (10MB) and page count limits (100 pages)
+- [x] Batch translation (groups of 50 blocks via asyncio.gather)
+- [x] PII detection: hybrid regex (email, phone, SSN, CC, IP) + LLM (names, addresses, orgs)
+- [x] PII redaction: mask, asterisk, or synthetic data strategies
+- [x] `POST /pii/detect` and `POST /pii/redact` endpoints
+- [ ] Translated PDF generation (re-render back to PDF)
 - [ ] Progress reporting via SSE for long documents
-- [ ] File size limits and page count limits
 
 ### Frontend
-- [ ] PDF upload UI (drag & drop)
-- [ ] Translation progress bar (SSE-powered)
-- [ ] Download translated PDF button
+- [x] PDF upload UI (drag & drop) with "Translate with Formatting" button
+- [x] Format tab bar (Plain / Markdown / LaTeX) with download buttons per format
+- [x] PII toggle, entity review with checkboxes, strategy selector
+- [x] Dual translate flow: plain (existing chunked) + formatted (backend PyMuPDF)
 - [ ] Side-by-side original vs translated preview (stretch)
 
 ---
@@ -125,4 +130,4 @@
 | Frontend | Myko | React app, UX, API client |
 | Infrastructure | Myko | Docker, CI/CD, deployment |
 | Docs | Shared | Both maintain docs for their areas |
-| PDF pipeline | TBD | New capability, decide ownership when starting Phase 2 |
+| PDF pipeline | Myko | PyMuPDF extraction, format renderers, PII detection/redaction |

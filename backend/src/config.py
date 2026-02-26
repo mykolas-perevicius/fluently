@@ -12,6 +12,10 @@ import os
 LLM_BASE_URL: str = os.getenv("LLM_BASE_URL", "http://localhost:11434/v1/")
 LLM_API_KEY: str = os.getenv("LLM_API_KEY", "ollama")
 LLM_MODEL: str = os.getenv("LLM_MODEL", "translategemma:12b")
+LLM_MODEL_VISION: str = os.getenv("LLM_MODEL_VISION", "translategemma:27b")
+
+# ── OCR / Tesseract ──────────────────────────────────────────────────
+TESSERACT_CMD: str = os.getenv("TESSERACT_CMD", "")
 
 # ── Language Detection ────────────────────────────────────────────────
 FASTTEXT_MODEL_PATH: str = os.getenv("FASTTEXT_MODEL_PATH", "models/fasttext/lid.176.bin")

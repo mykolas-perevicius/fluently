@@ -10,8 +10,7 @@ setup:
 
 # ── Development ────────────────────────────────────────────
 dev:
-	@echo "🚀 Starting all services..."
-	$(MAKE) -j3 backend frontend ollama
+	@bash scripts/dev.sh
 
 backend:
 	cd backend && uv run fastapi dev src/main.py

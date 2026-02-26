@@ -56,3 +56,28 @@ export interface ImageTranslationRequest {
   targetLanguageCode: string;
   sourceLanguageCode?: string;
 }
+
+// ── PII Detection & Redaction ───────────────────────────────────
+
+export interface PIIEntity {
+  type: string;
+  value: string;
+  start: number;
+  end: number;
+  confidence: number;
+  source: "regex" | "llm";
+}
+
+export type RedactionStrategy = "mask" | "asterisk" | "synthetic";
+
+// ── Formatted Document Output ───────────────────────────────────
+
+export type OutputFormat = "plaintext" | "markdown" | "latex";
+
+export interface FormattedDocumentOutput {
+  plaintext: string;
+  markdown: string;
+  latex: string;
+  pageCount: number;
+  blockCount: number;
+}

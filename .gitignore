@@ -31,3 +31,4 @@ Thumbs.db
 
 # ── Claude Code (user-specific) ────────────────────────────
 .claude/
+.mcp.json

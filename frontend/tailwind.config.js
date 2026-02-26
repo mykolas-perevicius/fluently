@@ -7,6 +7,7 @@ export default {
       fontFamily: {
         sans: ['"Inter"', "system-ui", "-apple-system", "sans-serif"],
         display: ['"Inter Tight"', "system-ui", "sans-serif"],
+        serif: ['"Lora"', "Georgia", "serif"],
       },
       colors: {
         glass: {
@@ -17,6 +18,13 @@ export default {
         accent: {
           cyan: "#06b6d4",
           purple: "#8b5cf6",
+        },
+        landing: {
+          bg: "#060B14",
+          surface: "#0F172A",
+          border: "#1E293B",
+          blue: "#006DC7",
+          indigo: "#6366F1",
         },
       },
       borderRadius: {
@@ -30,6 +38,36 @@ export default {
       },
       backdropBlur: {
         glass: "10px",
+      },
+      animation: {
+        ticker: "ticker 60s linear infinite",
+        "float-slow": "floatSlow 20s ease-in-out infinite",
+        "float-slow-alt": "floatSlowAlt 25s ease-in-out infinite",
+        "float-slow-drift": "floatSlowDrift 30s ease-in-out infinite",
+        "text-reveal": "textReveal 0.5s ease-out forwards",
+      },
+      keyframes: {
+        ticker: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        floatSlow: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(30px, -40px)" },
+        },
+        floatSlowAlt: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(-25px, 35px)" },
+        },
+        floatSlowDrift: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "33%": { transform: "translate(20px, -20px)" },
+          "66%": { transform: "translate(-15px, 10px)" },
+        },
+        textReveal: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
     },
   },

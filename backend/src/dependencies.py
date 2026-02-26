@@ -13,6 +13,7 @@ from utils.language import LanguageCode
 class State:
     translation_model: AsyncOpenAI
     lid_model: FastText
+    vision_model_available: bool = False
 
 
 class AppState(TypedDict):

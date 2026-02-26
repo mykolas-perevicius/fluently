@@ -1,0 +1,78 @@
+CONFIDENTIAL MEMORANDUM
+
+Meridian Consulting Group
+1742 Oakwood Boulevard, Suite 310
+San Francisco, CA 94107
+
+Date: January 15, 2026
+To: All Department Heads
+From: Jonathan R. Whitfield, Chief Operating Officer
+Re: Annual Client Data Audit and Security Review
+
+Dear Colleagues,
+
+As we begin the new fiscal year, I want to address several matters related to
+our client data management practices and the upcoming security audit scheduled
+for March 2026. This memorandum outlines the key action items and contacts for
+each department.
+
+First, I would like to acknowledge the outstanding work of our data governance
+team, led by Dr. Amelia Chen. Her team completed a comprehensive review of our
+data retention policies last quarter and identified several areas for
+improvement. Dr. Chen can be reached at amelia.chen@meridianconsulting.com or
+by phone at (415) 555-0198 for any questions regarding the updated policies.
+
+Our external auditor, Marcus Delgado from TrueNorth Compliance Partners, will
+be on site during the first two weeks of March. Marcus has requested that all
+departments prepare documentation of their data handling procedures. He can be
+contacted at m.delgado@truenorthcompliance.com or 1-800-555-7342 if you need
+clarification on the audit requirements before his arrival.
+
+For the purposes of the test environment, our IT department has set up a
+sandbox server at 192.168.14.203 that mirrors our production systems. Please
+direct all test queries to this server rather than the live environment. The
+sandbox uses sample data, including the following test records that should
+never appear in production:
+
+    Test Customer: Rebecca Okonkwo
+    Test SSN: 123-45-6789
+    Test Credit Card: 4532 8901 2345 6780
+    Test Email: r.okonkwo@testdomain.example.com
+
+These test records are clearly marked in the database with a flag value of
+"TEST_ONLY" and should be purged after the audit concludes.
+
+I also want to remind everyone of the importance of protecting personally
+identifiable information in our day-to-day operations. Under both federal and
+state regulations, the mishandling of PII can result in substantial penalties
+for the firm. Every employee is responsible for ensuring that sensitive data
+such as Social Security numbers, financial account details, medical records,
+and personal contact information are stored, transmitted, and disposed of in
+accordance with our Information Security Policy (ISP-2024-07).
+
+During last year's audit, TrueNorth Compliance Partners identified three minor
+findings related to access controls and encryption at rest. All three findings
+have since been remediated, and the patches were verified by our internal
+security team in November 2025. The remediation report is available on the
+shared drive under /security/audits/2025/remediation_final.pdf.
+
+Each department head should submit a completed Data Handling Questionnaire by
+February 28, 2026. The questionnaire template is attached to this memo and
+should be returned to me directly at j.whitfield@meridianconsulting.com. Please
+ensure that your responses are thorough and accurate, as they will form the
+basis of our pre-audit self-assessment.
+
+Looking ahead, Meridian Consulting Group is committed to maintaining the
+highest standards of data privacy and security. Our clients trust us with
+their most sensitive information, and that trust is the foundation of our
+business. I am confident that with your continued diligence and cooperation,
+we will pass the upcoming audit with distinction.
+
+Thank you for your attention to these matters. Please do not hesitate to
+reach out if you have any questions or concerns.
+
+Sincerely,
+
+Jonathan R. Whitfield
+Chief Operating Officer
+Meridian Consulting Group
