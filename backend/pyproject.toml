@@ -3,11 +3,12 @@ name = "fluently"
 version = "0.1.0"
 description = "High-performance translation API powered by local AI inference."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]>=0.129.0",
     "fasttext>=0.9.3",
     "openai>=2.20.0",
+    "pillow>=12.1.1",
 ]
 
 [dependency-groups]
@@ -23,7 +24,7 @@ dev = [
 
 [tool.black]
 line-length = 88
-target-version = ['py312']
+target-version = ['py314']
 
 [tool.isort]
 profile = "black"
@@ -42,7 +43,7 @@ markers = [
 
 [tool.ruff]
 line-length = 88
-target-version = "py312"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]

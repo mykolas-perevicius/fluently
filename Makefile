@@ -14,13 +14,13 @@ dev:
 	$(MAKE) -j3 backend frontend ollama
 
 backend:
-	cd backend && fastapi dev src/main.py
+	cd backend && uv run fastapi dev src/main.py
 
 frontend:
 	cd frontend && npm run dev
 
 ollama:
-	ollama serve
+	@ollama list >/dev/null 2>&1 && echo "Ollama already running." || ollama serve
 
 # ── Docker ─────────────────────────────────────────────────
 up:
